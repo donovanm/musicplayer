@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Music Player example</title>
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<link rel="stylesheet" type="text/css" href="css/music.css">
+</head>
+<body>
+	<main>
+		<h1>Music Player Example</h1>
+		<div id="player" class="wide">
+			<div id="album-cover">
+				<img />
+				<div id="song-info">
+					<div id="song-title"> </div>
+					<div id="song-progress">
+						<div id="song-progress-bar"></div>
+						<div id="song-progress-indicator"></div>
+					</div>
+					<div id="song-position-info">
+						<span id="song-position">0:00</span> / <span id="song-duration">-:--</span>
+					</div>
+				</div>
+			</div>
+			<div id="playlist"></div>
+			<div id="player-controls">
+				<a id="toggleView">L</a>
+				<a id="prev"></a>
+				<a id="playPauseToggle"></a>
+				<a id="next"></a>
+			</div>
+		</div>
+	</main>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="js/soundmanager2-nodebug-jsmin.js"></script>
+	<script src="js/musicplayer.js"></script>
+	<script src="js/playerUI.js"></script>
+</body>
+</html>

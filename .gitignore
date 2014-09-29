@@ -1,0 +1,4 @@
+img/*
+music/*
+.sass-cache/*
+*.sublime*
