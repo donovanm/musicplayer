@@ -1,5 +1,5 @@
 /**
-*	Kid Lion Music Player
+*	Music Player
 *	Authored by Donovan Munerlyn
 *
 *	This is a background music player that uses the SoundManager 2.0 audio library.
@@ -54,42 +54,32 @@ function MusicPlayer(playlist) {
 	this.isPlaying = false;
 	this.position = 0;
 
-	this.start = function() {
-		soundManager.setup({
-			onready: function() {
-				self.loadSong(playlist.get(self.trackNum).file, true);
-			},
+	this.init = function() {
+		var sound = new Audio();
 
-			ontimeout: function() {
-				console.error("Error loading SoundManager");
-			}
-		});
+		sound.addEventListener("timeupdate", function() {
+			self.notifyListener(self.evt.UPDATE, {
+				position: sound.currentTime,
+				duration: sound.duration
+			});
+		})
+
+		self.currentSound = sound;
+
+		self.currentSound.addEventListener("durationchange", function() {
+			self.notifyListener(self.evt.LOAD, self.getSongInfo());
+		})
+
+		self.currentSound.addEventListener("ended", function() {
+			self.next();
+		})
 
 		return self;
 	}
 
 	this.loadSong = function(fileName, autoPlay) {
 		self.position = 0;
-
-		self.currentSound = soundManager.createSound({
-			url: fileName,
-
-			onload: function() {
-				self.notifyListener(self.evt.LOAD, self.getSongInfo());
-			},
-
-			whileplaying: function() {
-				self.position = this.position;
-				self.notifyListener(self.evt.UPDATE, {
-					position: this.position,
-					duration: (self.currentSound !== null) ? self.currentSound.duration : 0
-				});
-			},
-
-			onfinish: function() {
-				self.next();
-			}
-		});
+		self.currentSound.src = fileName;
 
 		if (autoPlay)
 			self.play();
@@ -103,6 +93,8 @@ function MusicPlayer(playlist) {
 				art: songInfo.art
 			}
 		);
+
+		return self;
 	}
 
 	this.setPlaylist = function(playlist) {
@@ -118,9 +110,6 @@ function MusicPlayer(playlist) {
 
 		if (number >= 0 && number < playlist.length) {
 			self.pause();
-			if (self.currentSound !== null)
-				self.currentSound.destruct();
-
 			self.trackNum = number;
 			self.loadSong(playlist.get(self.trackNum).file, isPlaying);
 		}
@@ -144,15 +133,29 @@ function MusicPlayer(playlist) {
 	}
 
 	this.setPosition = function(position) {
-		self.currentSound.setPosition(position);
+		self.currentSound.currentTime = position;
+
+		return self;
 	}
 
 	this.play = function() {
 		if (!self.isPlaying) {
+			if (self.currentSound.readyState === 4) {
+				play();
+			} else {
+				self.currentSound.addEventListener("canplay", play);
+			}
+		}
+
+		function play(e) {
+			self.currentSound.removeEventListener("canplay", play);
+
 			self.currentSound.play();
 			self.notifyListener(self.evt.PLAY, null);
 			self.isPlaying = true;
 		}
+
+		return self;
 	}
 
 	this.pause = function() {
@@ -161,48 +164,56 @@ function MusicPlayer(playlist) {
 			self.notifyListener(self.evt.PAUSE, null);
 			self.isPlaying = false;
 		}
+
+		return self;
 	}
 
 	this.next = function() {
 		var isPlaying = self.isPlaying;
 		self.pause();
-		self.currentSound.destruct();
 
 		if (++self.trackNum >= self.playlist.length)
 			self.trackNum = 0;
 
 		self.loadSong(playlist.get(self.trackNum).file, isPlaying);
+
+		return self;
 	}
 
 	this.prev = function() {
 		var isPlaying = self.isPlaying;
 		self.pause();
-		self.currentSound.destruct();
 
 		if (--self.trackNum < 0)
 			self.trackNum = playlist.length - 1;
 
 		self.loadSong(playlist.get(self.trackNum).file, isPlaying);
+
+		return self;
 	}
 
 	this.setVolume = function(volume) {
+		if (volume >= 0 && volume <= 1)
+			self.currentSound.volume = volume;
 
+		return self;
 	}
 
 	// This pauses the player without calling event handlers. This is useful when
 	// using a slider to change the song position
 	this.silence = function() {
 		self.currentSound.pause();
+		return self;
 	}
 
 	this.unsilence = function() {
 		self.currentSound.play();
+		return self;
 	}
 
-	// Just changes the current track to a random one. Maybe in the future I'll
-	// add a full shuffle
-	this.shuffle = function() {
-		self.trackNum = Math.floor(Math.random() * playlist.length);
+	// Chooses a random track
+	this.random = function() {
+		self.setTrackNum(Math.floor(Math.random() * playlist.length));
 		return self;
 	}
 
@@ -255,6 +266,8 @@ function MusicPlayer(playlist) {
 			for (var i = 0, len = functions.length; i < len; i++)
 				functions[i](data);
 	}
+
+	this.init();
 }
 MusicPlayer.create = function(playlist) {
 	return new MusicPlayer(playlist);
@@ -278,9 +291,9 @@ function Playlist() {
 		return self;
 	}
 
-	this.art = function(albumArt) {
+	this.defaultArt = function(albumArt) {
 		self.art = albumArt;
-		console.log("Art set to '" + albumArt + "'");
+		// console.log("Art set to '" + albumArt + "'");
 		return self;
 	}
 
@@ -301,26 +314,3 @@ Playlist.create = function() {
 	return new Playlist();
 }
 
-
-
-// Let's actually create the music player and playlist and start playing music
-musicPlayer = MusicPlayer.create(
-		Playlist.create()
-			.prefix("music/")
-			.add({ file: "lord_knows.mp3",	title: "Lord Knows",	duration: "3:36" })
-			.add({ file: "dnstm.mp3",		title: "#DNSTM",		duration: "4:04",	art: "img/albumcover.jpg" })
-			.add({ file: "chill_out.mp3",	title: "Chill Out",		duration: "3:06",	art: "img/album3.jpg" })
-			.add({ file: "kid_july.mp3",	title: "July",			duration: "1:36",	art: "img/YungKings.jpg" })
-			.add({ file: "mlk.mp3",			title: "MLK",			duration: "1:35",	art: "img/album3.jpg" })
-			.add({ file: "dont_letem_lie_to_you.mp3", title: "Don't Let 'Em Lie To You", duration: "1:46"})
-			.add({ file: "questions.mp3",	title: "Questions",		duration: "1:50" })
-			.add({ file: "party.mp3",		title: "Party",			duration: "1:26" })
-			.add({ file: "money.mp3",		title: "Money",			duration: "1:20",	art: "img/album3.jpg" })
-			.add({ file: "idgaf.mp3",		title: "IDGAF Freestyle", duration: "1:30" })
-			.add({ file: "rise.mp3",		title: "Rise",			duration: "1:55" })
-			.add({ file: "moola.mp3",		title: "Moola",			duration: "1:14",	art: "img/YungKings.jpg" })
-			.art("img/album2.jpg")
-	)
-	// .shuffle()
-	.setTrackNum(10)
-	.start();

@@ -1,6 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Oxygen:400,300);
 #player {
-	/*background: rgba(255, 255, 255, 0.95);*/
 	border-radius: 5px;
 	color: #222;
 	width: 350px;
@@ -9,10 +8,9 @@
 	-moz-user-select: none;
 	-ms-user-select: none;
 
-	color: #716E54;
 	color: #adadad;
-	background-color: #070707;
-	/*background: linear-gradient(to bottom right, #000, #000, rgba(38, 38, 38, 1));*/
+	background-color: #3B3B3B;
+	box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.43);
 }
 #player > * {
 	padding: 0 10px;
@@ -35,7 +33,6 @@
 	}
 #song-info {
 	background: rgba(0, 0, 0, 0.42);
-	/*background: black;*/
 	position: absolute;
 	bottom: 0;
 	right: 0;
@@ -48,7 +45,6 @@
 }
 	#song-title {
 		font-size: 133%;
-		/*color: #E1CABA;*/
 		color: #e8e8e8;
 		text-shadow: 0px 0px 5px rgba(0, 0, 0, 1);
 		cursor: default;
@@ -61,7 +57,6 @@
 		position: relative;
 		height: 11px;
 		cursor: pointer;
-		/*background-color: rgba(255, 255, 255, 0.3);*/
 	}
 		#song-progress #song-progress-bar {
 			height: 1px;
@@ -84,12 +79,12 @@
 #player-controls {
 	text-align: center;
 	background: linear-gradient(180deg, #070707, #070707 87%, #121212);
+	background: linear-gradient(180deg, #6F6F6F, #515151 87%, #121212);
 	border-radius: 0 0 5px 5px;
 	position: relative;
 }
 #player-controls > a {
 	margin: 10px 10px;
-	/*color: #f0f0f0;*/
 	display: inline-block;
 	background-size: 100%;
 	outline: 0;
@@ -131,7 +126,8 @@
 	height: 325px;
 	overflow: auto;
 	background-color: #0a0a0a;
-	background-color: rgba(255, 255, 255, 0.12)
+	background-color: rgba(255, 255, 255, 0.12);
+	background-color: #fff;
 }
 
 	#playlist > .song {
@@ -140,34 +136,34 @@
 
 		transition: background-color 0.3s, color 0.3s;
 		border-bottom: 1px solid #111;
+		border-bottom: 1px solid rgba(17, 17, 17, 0.06);
 		font-size: 100%;
 	}
 	#playlist > .song.selected {
 		/*background: rgba(255, 127, 0, 0.95);*/
 		color: rgba(255, 255, 255, 0.90);
 		color: rgba(62, 116, 134, 0.9);
+		background-color: rgba(19, 84, 120, 0.47);
 	}
 	#playlist > .song:hover {
-		/*background: rgba(255, 255, 255, 0.9);*/
-		/*color: #e0e0e0;
-		color: rgba(44, 78, 89, 0.9);*/
+		color: rgba(44, 78, 89, 0.6);
 		background-color: rgba(255, 255, 255, 0.09);
+		background-color: rgba(19, 84, 120, 0.27);
 	}
 	#playlist > .song.selected:hover {
-		/*background: rgba(255, 127, 0, 0.69);*/
 		color: rgba(62, 116, 134, 0.9);
+		background-color: rgba(19, 84, 120, 0.47);
 	}
 	#playlist > .song > .duration {
 		display: block;
 		float: right;
-		/*padding-right: 10px;*/
 	}
 	#playlist > .song > .title {
 		/*padding-left: 10px;*/
 	}
 
 
-/* Styles for the player in a wide position */
+/* Styles for the player in a wide orientation */
 #player.wide {
 	width: 700px;
 	padding-top: 24px;
