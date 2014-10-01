@@ -134,7 +134,6 @@ function MusicPlayer(playlist) {
 
 	this.setPosition = function(position) {
 		self.currentSound.currentTime = position;
-
 		return self;
 	}
 

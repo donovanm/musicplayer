@@ -9,32 +9,16 @@
 <body>
 	<main>
 		<h1>Music Player Example</h1>
-		<div id="player" class="wide">
-			<div id="album-cover">
-				<img />
-				<div id="song-info">
-					<div id="song-title"> </div>
-					<div id="song-progress">
-						<div id="song-progress-bar"></div>
-						<div id="song-progress-indicator"></div>
-					</div>
-					<div id="song-position-info">
-						<span id="song-position">0:00</span> / <span id="song-duration">-:--</span>
-					</div>
-				</div>
-			</div>
-			<div id="playlist"></div>
-			<div id="player-controls">
-				<a id="toggleView">L</a>
-				<a id="prev"></a>
-				<a id="playPauseToggle"></a>
-				<a id="next"></a>
-			</div>
-		</div>
+		<p>This is just an example of dynamically tying a user interface to a background music player that's already playing music. I used this technique on a site that required background music playing in a single page app while allowing users to pull up the UI in its own view when necessary.</p>
+		<p>I'm currently refactoring this into an easy-to-use music player library. Creating a playlist will be a cinch and the interface will be easy to customize the look of the player with CSS.</p>
+		<div id="mp1" class="music-player wide embossed"></div>
+		<div id="mp2" class="music-player inline light-playlist"></div>
+		<div id="mp3" class="music-player inline embossed light-info"></div>
+		<div id="mp4" class="music-player inline clear-info dark-playlist"></div>
 	</main>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	<script src="js/musicplayer.js"></script>
-	<script src="js/playerUI.js"></script>
+	<script src="js/MusicPlayer.js"></script>
+	<script src="js/MusicPlayerUI.js"></script>
 	<script src="js/main.js"></script>
 </body>
 </html>
